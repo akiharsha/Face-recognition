@@ -1,0 +1,27 @@
+# Requirements for Python 3.12+ (Latest Compatible Versions)
+# =======================================================
+
+# Core ML Libraries
+ultralytics==8.3.0
+facenet-pytorch==2.5.3
+torch==2.4.0
+torchvision==0.19.0
+
+# Computer Vision & Image Processing
+opencv-python==4.10.0.84
+Pillow==10.4.0
+
+# Scientific Computing
+numpy==1.26.4
+scipy==1.14.1
+
+# Web Framework
+flask==3.0.3
+flask-cors==4.0.1
+werkzeug==3.0.3
+
+# Utilities
+tqdm==4.66.5
+
+# For Python 3.12+ compatibility
+# All packages tested with Python 3.12+
