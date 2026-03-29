@@ -1,0 +1,12 @@
+ultralytics==8.0.196
+facenet-pytorch==2.5.3
+opencv-python==4.8.1.78
+torch==2.0.1
+torchvision==0.15.2
+numpy==1.24.3
+Pillow==10.0.0
+scipy==1.11.1
+tqdm==4.66.1
+flask==2.3.3
+flask-cors==4.0.0
+werkzeug==2.3.7

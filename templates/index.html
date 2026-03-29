@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Recognition System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-user-circle text-2xl"></i>
+                    <h1 class="text-2xl font-bold">Face Recognition System</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="status" class="text-sm bg-green-500 px-3 py-1 rounded-full">
+                        <i class="fas fa-circle text-xs mr-1"></i> Ready
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Tab Navigation -->
+        <div class="bg-white rounded-lg shadow-md mb-6">
+            <div class="flex border-b">
+                <button class="tab-btn px-6 py-3 font-medium text-blue-600 border-b-2 border-blue-600" data-tab="upload">
+                    <i class="fas fa-upload mr-2"></i>Upload Photos
+                </button>
+                <button class="tab-btn px-6 py-3 font-medium text-gray-600 hover:text-blue-600" data-tab="webcam">
+                    <i class="fas fa-camera mr-2"></i>Webcam Recognition
+                </button>
+                <button class="tab-btn px-6 py-3 font-medium text-gray-600 hover:text-blue-600" data-tab="manage">
+                    <i class="fas fa-users mr-2"></i>Manage People
+                </button>
+            </div>
+        </div>
+
+        <!-- Upload Tab -->
+        <div id="upload-tab" class="tab-content">
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Upload Section -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4">
+                        <i class="fas fa-user-plus mr-2"></i>Add New Person
+                    </h2>
+                    
+                    <form id="uploadForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Person's Name
+                            </label>
+                            <input type="text" id="personName" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="Enter person's name">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Reference Photo
+                            </label>
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition-colors">
+                                <input type="file" id="photoFile" accept="image/*" required class="hidden">
+                                <label for="photoFile" class="cursor-pointer">
+                                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                                    <p class="text-gray-600">Click to upload or drag and drop</p>
+                                    <p class="text-sm text-gray-500">PNG, JPG, JPEG up to 16MB</p>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" 
+                                class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-upload mr-2"></i>Upload Photo
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Generate Embeddings Section -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4">
+                        <i class="fas fa-cogs mr-2"></i>Generate Embeddings
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <p class="text-sm text-blue-800">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                Generate face embeddings from all uploaded photos. This is required before face recognition can work.
+                            </p>
+                        </div>
+                        
+                        <button id="generateBtn" 
+                                class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors">
+                            <i class="fas fa-magic mr-2"></i>Generate Embeddings
+                        </button>
+                        
+                        <div id="generateStatus" class="hidden">
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <div class="flex items-center">
+                                    <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                                    <span class="text-sm text-gray-600">Generating embeddings...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                    </div>
+
+        <!-- Webcam Tab -->
+        <div id="webcam-tab" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-bold mb-4">
+                    <i class="fas fa-camera mr-2"></i>Real-time Face Recognition
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Webcam Feed -->
+                    <div>
+                        <div class="relative bg-black rounded-lg overflow-hidden" style="aspect-ratio: 4/3;">
+                            <video id="webcam" class="w-full h-full object-cover" autoplay></video>
+                            <canvas id="overlay" class="absolute top-0 left-0 w-full h-full"></canvas>
+                        </div>
+                        
+                        <div class="mt-4 flex space-x-4">
+                            <button id="startWebcam" 
+                                    class="flex-1 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors">
+                                <i class="fas fa-play mr-2"></i>Start Camera
+                            </button>
+                            <button id="stopWebcam" 
+                                    class="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors">
+                                <i class="fas fa-stop mr-2"></i>Stop Camera
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Recognition Results -->
+                    <div>
+                        <h3 class="font-bold mb-3">Recognition Results</h3>
+                        <div id="recognitionResults" class="space-y-2">
+                            <div class="bg-gray-50 rounded-lg p-4 text-center text-gray-500">
+                                <i class="fas fa-user-slash text-3xl mb-2"></i>
+                                <p>No faces detected yet</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h4 class="font-bold mb-2">Settings</h4>
+                            <div class="space-y-2">
+                                <label class="flex items-center">
+                                    <span class="text-sm mr-2">Similarity Threshold:</span>
+                                    <input type="range" id="similarityThreshold" min="0" max="1" step="0.1" value="0.6" 
+                                           class="flex-1">
+                                    <span id="thresholdValue" class="text-sm ml-2">0.6</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Tab -->
+        <div id="manage-tab" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-bold mb-4">
+                    <i class="fas fa-users-cog mr-2"></i>Manage People
+                </h2>
+                
+                <div id="managePeopleList" class="space-y-4">
+                    <!-- People management will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
