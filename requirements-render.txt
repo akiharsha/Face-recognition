@@ -1,0 +1,26 @@
+# Render.com Compatible Requirements
+# =================================
+
+# Core ML Libraries (Render Compatible Versions)
+ultralytics==8.0.196
+facenet-pytorch==2.5.3
+torch==2.1.2
+torchvision==0.16.2
+
+# Computer Vision & Image Processing
+opencv-python==4.8.1.78
+Pillow==10.0.0
+
+# Scientific Computing
+numpy==1.24.3
+scipy==1.11.1
+
+# Web Framework
+flask==2.3.3
+flask-cors==4.0.0
+werkzeug==2.3.7
+
+# Utilities
+tqdm==4.66.1
+
+# Render.com tested and compatible versions
