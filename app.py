@@ -13,15 +13,12 @@ Author: Face Recognition System
 
 import os
 import pickle
-import json
 import numpy as np
 from pathlib import Path
 import cv2
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
-import threading
-import time
 from ultralytics import YOLO
 from facenet_pytorch import InceptionResnetV1
 import torch
@@ -309,4 +306,5 @@ if __name__ == '__main__':
     load_embeddings()
     
     # Run the app
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # For production, use: debug=False, host='127.0.0.1'
+    app.run(debug=True, host='127.0.0.1', port=5000)
